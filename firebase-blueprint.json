@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "Player account profile, inventory, unlocked skins, coins, and game progress.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the player",
+          "maxLength": 128
+        },
+        "username": {
+          "type": "string",
+          "description": "Display name of the player",
+          "minLength": 2,
+          "maxLength": 24,
+          "pattern": "^[a-zA-Z0-9_ ]+$"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the player",
+          "maxLength": 128
+        },
+        "coins": {
+          "type": "number",
+          "description": "In-game coins balance"
+        },
+        "ownedSkins": {
+          "type": "array",
+          "description": "List of skin IDs owned by the player"
+        },
+        "equippedSkin": {
+          "type": "string",
+          "description": "ID of currently equipped skin",
+          "maxLength": 32
+        },
+        "chestsOpened": {
+          "type": "array",
+          "description": "IDs of treasure chests opened on the map"
+        },
+        "flowersWatered": {
+          "type": "number",
+          "description": "Total flowers watered in world"
+        },
+        "stepsTaken": {
+          "type": "number",
+          "description": "Total steps walked in world"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when account was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when player saved last progress"
+        }
+      },
+      "required": ["userId", "username", "coins", "ownedSkins", "equippedSkin"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Private player progress document isolated per user UID."
+    }
+  }
+}

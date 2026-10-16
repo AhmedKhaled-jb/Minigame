@@ -1,0 +1,8 @@
+{
+  "name": "MiniWorld",
+  "description": "A charming 2D top-down pixel-art exploration game with customizable characters, shops, and cloud saving.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

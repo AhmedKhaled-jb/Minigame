@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+}
+
+.font-pixel {
+  font-family: 'Press Start 2P', cursive, monospace;
+}
+
+.font-body {
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* Custom retro pixel button shadow styling */
+.pixel-box {
+  box-shadow: 
+    0 -4px 0 0 #1e293b,
+    0 4px 0 0 #0f172a,
+    -4px 0 0 0 #1e293b,
+    4px 0 0 0 #0f172a,
+    0 6px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+.pixel-btn {
+  box-shadow: 
+    inset -3px -3px 0px 0px rgba(0, 0, 0, 0.35),
+    inset 3px 3px 0px 0px rgba(255, 255, 255, 0.25),
+    0 4px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+.pixel-btn:active {
+  transform: translateY(2px);
+  box-shadow: 
+    inset -2px -2px 0px 0px rgba(0, 0, 0, 0.35),
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.25),
+    0 2px 0 0 rgba(0, 0, 0, 0.4);
+}

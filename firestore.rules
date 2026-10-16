@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId is string &&
+             data.userId.size() <= 128 &&
+             data.userId == request.auth.uid &&
+             data.username is string &&
+             data.username.size() >= 2 &&
+             data.username.size() <= 24 &&
+             data.coins is number &&
+             data.coins >= 0 &&
+             data.ownedSkins is list &&
+             data.ownedSkins.size() <= 50 &&
+             data.ownedSkins.size() > 0 &&
+             data.ownedSkins[0] is string &&
+             data.equippedSkin is string &&
+             data.equippedSkin.size() <= 32;
+    }
+
+    match /users/{userId} {
+      // Direct access only by document owner
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      // Creation allows the authenticated user to initialize their own profile
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidUserProfile(incoming()) &&
+                       incoming().userId == userId &&
+                       incoming().keys().hasAll(['userId', 'username', 'coins', 'ownedSkins', 'equippedSkin']);
+
+      // Updates allow modifying inventory, coins, and equipped skin while preventing identity theft
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidUserProfile(incoming()) &&
+                       incoming().userId == existing().userId;
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+    }
+  }
+}
